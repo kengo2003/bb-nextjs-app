@@ -4,22 +4,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { BBDataType } from "@/app/types/types";
 import { Button } from "@/components/ui/button";
-
-async function getDetailData(id: number) {
-  const response = await fetch(`http://localhost:3000/api/post/${id}`, {
-    cache: "no-store",
-  });
-  const bbDetailData: BBDataType = await response.json();
-  return bbDetailData;
-}
+import { getDetailData } from "@/app/actions/postAction";
 
 const DetailPage = ({ params }: { params: { Id: number } }) => {
   const [bbDetailData, setBbDetailData] = useState<BBDataType | null>(null);
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       const data = await getDetailData(params.Id);
       setBbDetailData(data);
-    }
+    };
     fetchData();
   }, [params.Id]);
 
@@ -29,6 +22,7 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
   }
   const { id, title, content, username } = bbDetailData;
 
+  //この削除処理もserverActionに
   const deleteBB = async () => {
     try {
       await fetch(`http://localhost:3000/api/post/${id}`, {
@@ -42,7 +36,7 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
   };
 
   return (
-    <div className="mx-auto max-w-4xl p-10 border border-gray-300 bg-white ">
+    <div className="mx-auto max-w-4xl p-10 border border-gray-300 bg-white mt-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold">{title}</h1>
         <p className="text-gray-700">{username}</p>
@@ -58,15 +52,15 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
           </Link>
         </div>
         <div className="w-full text-right">
-          <Link href={"/edit"}>
+          <Link href={`/edit/${id}`}>
             <Button className="w-1/4">編集</Button>
           </Link>
-          <button
+          <Button
             onClick={deleteBB}
             className="ml-8 w-1/4 bg-red-600 border border-slate-500"
           >
             削除
-          </button>
+          </Button>
         </div>
       </div>
     </div>

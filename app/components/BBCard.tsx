@@ -15,9 +15,8 @@ interface bbDataProps {
   bbData: BBDataType;
 }
 
-const BBCard = ({bbData}: bbDataProps) => {
+const BBCard = ({ bbData }: bbDataProps) => {
   const { id, title, content, createdAt, username } = bbData;
-
 
   return (
     <div>
@@ -28,9 +27,7 @@ const BBCard = ({bbData}: bbDataProps) => {
             {username}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          {content}
-        </CardContent>
+        <CardContent className="w-full">{content}</CardContent>
         <CardFooter className="flex justify-between">
           <Link href={`/posts/${id}`} className="text-blue-500">
             Read More
