@@ -8,29 +8,24 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { BBDataType } from "../types/types";
+} from "./card";
+import { BBDataType } from "@/app/types/types";
 
 interface bbDataProps {
   bbData: BBDataType;
 }
 
-const BBCard = ({bbData}: bbDataProps) => {
+const BBCard = ({ bbData }: bbDataProps) => {
   const { id, title, content, createdAt, username } = bbData;
-
 
   return (
     <div>
       <Card className="text-black">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
-          <CardDescription>
-            {username}
-          </CardDescription>
+          <CardDescription>{username}</CardDescription>
         </CardHeader>
-        <CardContent>
-          {content}
-        </CardContent>
+        <CardContent className="w-full">{content}</CardContent>
         <CardFooter className="flex justify-between">
           <Link href={`/posts/${id}`} className="text-blue-500">
             Read More

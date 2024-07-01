@@ -8,13 +8,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { editBB, getDetailData } from "@/app/actions/postAction";
+import { BBDataType } from "@/app/types/types";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { postBB } from "@/app/actions/postAction";
 
 export const formSchema = z.object({
   username: z
@@ -29,7 +30,9 @@ export const formSchema = z.object({
     .max(100, { message: "本文は100字以内で入力してください" }),
 });
 
-const CreatePage = () => {
+const EditPage = ({ params }: { params: { Id: number } }) => {
+  const [bbDetailData, setBbDetailData] = useState<BBDataType>();
+  //form初期値設定
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,18 +42,45 @@ const CreatePage = () => {
     },
   });
 
+  //post情報取得
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getDetailData(params.Id);
+      console.log("log: ", data);
+      setBbDetailData(data);
+    };
+    fetchData();
+  }, [params.Id]);
+
+  //Loding画面
+  if (!bbDetailData) {
+    return (
+      <div>
+        <div className="font-bold text-2xl text-black text-center pt-32">Loading...</div>
+      </div>
+    );
+  }
+
+  form.reset({
+    username: bbDetailData.username,
+    title: bbDetailData.title,
+    content: bbDetailData.content,
+  });
+
   async function onSubmit(value: z.infer<typeof formSchema>) {
     const { username, title, content } = value;
-    postBB({ username, title, content });
+    const editId = params.Id;
+    console.log(editId, username, title, content);
+    editBB(editId, { username, title, content });
   }
 
   return (
     <div className="mt-10">
-      <h1 className="text-4xl font-bold text-center py-6">新規投稿</h1>
+      <h1 className="text-4xl font-bold text-center py-6">編集画面</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-3 w-1/2 px-7 mx-auto"
+          className="space-y-3 w-full lg:w-1/2 px-7 mx-auto"
         >
           <FormField
             control={form.control}
@@ -95,11 +125,15 @@ const CreatePage = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">投稿</Button>
+          <div className="text-right">
+            <Button type="submit" className="bg-green-600">
+              保存
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
   );
 };
 
-export default CreatePage;
+export default EditPage;

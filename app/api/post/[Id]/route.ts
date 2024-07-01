@@ -1,6 +1,4 @@
 import prisma from "@/lib/prismaClient";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export async function GET(
