@@ -12,7 +12,7 @@ export const getDetailData = async (id: number) => {
   const response = await fetch(`http://localhost:3000/api/post/${id}`, {
     cache: "no-store",
   });
-  const bbDetailData: BBDataType = await response.json();
+  const bbDetailData = await response.json();
   return bbDetailData;
 };
 
@@ -35,19 +35,26 @@ export const postBB = async ({
 };
 
 //編集処理
-export const editBB = async ({
-  username,
-  title,
-  content,
-}: z.infer<typeof formSchema>) => {
-  await prisma.post.create({
-    //DB処理書く
-    data: {
-      username,
-      title,
-      content,
-    },
-  });
+export const editBB = async (
+  editId: number,
+  { username, title, content }: z.infer<typeof formSchema>
+) => {
+  try {
+    await prisma.post.update({
+      //DB処理書く
+      where: {
+        id: editId,
+      },
+      data: {
+        username: username,
+        title: title,
+        content: content,
+      },
+    });
+    console.log("log: edit done");
+  } catch (error) {
+    console.error("log: edit error");
+  }
 
   revalidatePath("/");
   redirect("/");

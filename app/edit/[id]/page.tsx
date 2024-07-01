@@ -8,14 +8,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Textarea } from "@/components/ui/textarea";
 import { editBB, getDetailData } from "@/app/actions/postAction";
 import { BBDataType } from "@/app/types/types";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export const formSchema = z.object({
   username: z
@@ -31,34 +31,47 @@ export const formSchema = z.object({
 });
 
 const EditPage = ({ params }: { params: { Id: number } }) => {
+  const [bbDetailData, setBbDetailData] = useState<BBDataType>();
+  //form初期値設定
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      title: "",
+      content: "",
+    },
+  });
+
   //post情報取得
-  const [bbDetailData, setBbDetailData] = useState<BBDataType | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       const data = await getDetailData(params.Id);
+      console.log("log: ", data);
       setBbDetailData(data);
     };
     fetchData();
   }, [params.Id]);
 
-  //Loding画面テスト用
+  //Loding画面
   if (!bbDetailData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <div className="font-bold text-2xl text-black text-center pt-32">Loading...</div>
+      </div>
+    );
   }
-  const { id, title, content, username } = bbDetailData;
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      //設定する
-      username: username,
-      title: title,
-      content: content,
-    },
+
+  form.reset({
+    username: bbDetailData.username,
+    title: bbDetailData.title,
+    content: bbDetailData.content,
   });
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     const { username, title, content } = value;
-    editBB({ username, title, content });
+    const editId = params.Id;
+    console.log(editId, username, title, content);
+    editBB(editId, { username, title, content });
   }
 
   return (
