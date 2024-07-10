@@ -16,9 +16,15 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
     fetchData();
   }, [params.Id]);
 
-  //Loding画面テスト用
+  //Loding画面
   if (!bbDetailData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <div className="font-bold text-2xl text-black text-center pt-32">
+          Loading...
+        </div>
+      </div>
+    );
   }
   const { id, title, content, username } = bbDetailData;
 

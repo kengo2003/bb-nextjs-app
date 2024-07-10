@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,7 @@ export const formSchema = z.object({
 });
 
 const EditPage = ({ params }: { params: { Id: number } }) => {
-  const [bbDetailData, setBbDetailData] = useState<BBDataType>();
+  const [bbDetailData, setBbDetailData] = useState<BBDataType>(null);
   //form初期値設定
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -42,7 +42,7 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
     },
   });
 
-  //post情報取得
+  //post情報取得;
   useEffect(() => {
     const fetchData = async () => {
       const data = await getDetailData(params.Id);
@@ -52,20 +52,31 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
     fetchData();
   }, [params.Id]);
 
+  // Form初期値を設定
+  useEffect(() => {
+    if (bbDetailData) {
+      form.reset({
+        username: bbDetailData.username,
+        title: bbDetailData.title,
+        content: bbDetailData.content,
+      });
+    }
+  }, [bbDetailData, form]);
+
   //Loding画面
   if (!bbDetailData) {
     return (
       <div>
-        <div className="font-bold text-2xl text-black text-center pt-32">Loading...</div>
+        <div className="font-bold text-2xl text-black text-center pt-32">
+          Loading...
+        </div>
       </div>
     );
   }
 
-  form.reset({
-    username: bbDetailData.username,
-    title: bbDetailData.title,
-    content: bbDetailData.content,
-  });
+  //テスト用
+  // const pageNumber: number = params.Id;
+  // console.log(pageNumber);
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     const { username, title, content } = value;
