@@ -160,6 +160,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/font@npm:^14.2.5":
+  version: 14.2.5
+  resolution: "@next/font@npm:14.2.5"
+  peerDependencies:
+    next: "*"
+  checksum: 10c0/3134fd9bd418a72d6a023fa7d98fc4b556a00cc93a229db2e8a5339c0e9310bf88450a9cda17d5084b35a4686805cbfbee595fe884d60d40d34ee1f184b724d8
+  languageName: node
+  linkType: hard
+
 "@next/swc-darwin-arm64@npm:14.2.4":
   version: 14.2.4
   resolution: "@next/swc-darwin-arm64@npm:14.2.4"
@@ -834,6 +843,7 @@ __metadata:
   resolution: "bb-nextjs-app@workspace:."
   dependencies:
     "@hookform/resolvers": "npm:^3.6.0"
+    "@next/font": "npm:^14.2.5"
     "@prisma/client": "npm:5.16.2"
     "@radix-ui/react-label": "npm:^2.1.0"
     "@radix-ui/react-slot": "npm:^1.1.0"

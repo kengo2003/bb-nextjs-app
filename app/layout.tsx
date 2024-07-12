@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "@next/font";
 import "./globals.css";
 import Header from "@/components/layouts/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "BBS app",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="bg-slate-200">
-      <body className={inter.className}>
+      <body>
         <div className="bg-slate-200">
           <Header />
           {children}

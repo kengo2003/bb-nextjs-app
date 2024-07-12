@@ -31,7 +31,7 @@ export const formSchema = z.object({
 });
 
 const EditPage = ({ params }: { params: { Id: number } }) => {
-  const [bbDetailData, setBbDetailData] = useState<BBDataType>(null);
+  const [bbDetailData, setBbDetailData] = useState<BBDataType>();
   //form初期値設定
   const form = useForm({
     resolver: zodResolver(formSchema),
