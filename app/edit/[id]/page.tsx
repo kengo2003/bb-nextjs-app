@@ -47,7 +47,9 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
     const fetchData = async () => {
       const data = await getDetailData(params.Id);
       console.log("log: ", data);
-      setBbDetailData(data);
+      if (data) {
+        setBbDetailData(data);
+      }
     };
     fetchData();
   }, [params.Id]);

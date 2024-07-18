@@ -10,16 +10,16 @@ import { BBDataType } from "@/app/types/types";
 //全記事取得
 export const getAllData = async () => {
   const bbData: BBDataType[] = await prisma.post.findMany();
-  //投稿が膨大になった時には改修必要
   return bbData;
 };
 
 //投稿詳細取得
-export const getDetailData = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/post/${id}`, {
-    cache: "no-store",
+export const getDetailData = async (id: any) => {
+  const bbDetailData = await prisma.post.findUnique({
+    where: {
+      id: parseInt(id),
+    },
   });
-  const bbDetailData = await response.json();
   return bbDetailData;
 };
 
