@@ -1,17 +1,8 @@
 import CardList from "../components/ui/CardList";
-import { BBDataType } from "./types/types";
-
-async function getbbData() {
-  //SSR
-  const response = await fetch("http://localhost:3000/api/post", {
-    cache: "no-store",
-  });
-  const bbData: BBDataType[] = await response.json();
-  return bbData;
-}
+import { getAllData } from "./actions/postAction";
 
 export default async function Home() {
-  const bbData = await getbbData();
+  const bbData = await getAllData();
   return (
     <main>
       <CardList bbData={bbData} />

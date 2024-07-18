@@ -74,10 +74,6 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
     );
   }
 
-  //テスト用
-  // const pageNumber: number = params.Id;
-  // console.log(pageNumber);
-
   async function onSubmit(value: z.infer<typeof formSchema>) {
     const { username, title, content } = value;
     const editId = params.Id;

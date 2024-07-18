@@ -5,7 +5,14 @@ import { formSchema } from "../posts/create/page";
 import prisma from "@/lib/prismaClient";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { BBDataType } from "../types/types";
+import { BBDataType } from "@/app/types/types";
+
+//全記事取得
+export const getAllData = async () => {
+  const bbData: BBDataType[] = await prisma.post.findMany();
+  //投稿が膨大になった時には改修必要
+  return bbData;
+};
 
 //投稿詳細取得
 export const getDetailData = async (id: number) => {
@@ -36,14 +43,13 @@ export const postBB = async ({
 
 //編集処理
 export const editBB = async (
-  editId: number,
+  editId: any,
   { username, title, content }: z.infer<typeof formSchema>
 ) => {
   try {
     await prisma.post.update({
-      //DB処理書く
       where: {
-        id: editId,
+        id: parseInt(editId),
       },
       data: {
         username: username,
@@ -53,6 +59,7 @@ export const editBB = async (
     });
     console.log("log: edit done");
   } catch (error) {
+    console.log(editId, { username, title, content });
     console.error("log: edit error");
   }
 
