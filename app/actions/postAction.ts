@@ -5,14 +5,21 @@ import { formSchema } from "../posts/create/page";
 import prisma from "@/lib/prismaClient";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { BBDataType } from "../types/types";
+import { BBDataType } from "@/app/types/types";
+
+//全記事取得
+export const getAllData = async () => {
+  const bbData: BBDataType[] = await prisma.post.findMany();
+  return bbData;
+};
 
 //投稿詳細取得
-export const getDetailData = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/post/${id}`, {
-    cache: "no-store",
+export const getDetailData = async (id: any) => {
+  const bbDetailData = await prisma.post.findUnique({
+    where: {
+      id: parseInt(id),
+    },
   });
-  const bbDetailData = await response.json();
   return bbDetailData;
 };
 
@@ -36,14 +43,13 @@ export const postBB = async ({
 
 //編集処理
 export const editBB = async (
-  editId: number,
+  editId: any,
   { username, title, content }: z.infer<typeof formSchema>
 ) => {
   try {
     await prisma.post.update({
-      //DB処理書く
       where: {
-        id: editId,
+        id: parseInt(editId),
       },
       data: {
         username: username,
@@ -53,9 +59,26 @@ export const editBB = async (
     });
     console.log("log: edit done");
   } catch (error) {
+    console.log(editId, { username, title, content });
     console.error("log: edit error");
   }
 
+  revalidatePath("/");
+  redirect("/");
+};
+
+//削除処理
+export const deleteBB = async (id: any) => {
+  try {
+    await prisma.post.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    console.log("log: delete done");
+  } catch (error) {
+    console.error("log: delete error");
+  }
   revalidatePath("/");
   redirect("/");
 };

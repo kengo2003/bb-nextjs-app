@@ -31,7 +31,7 @@ export const formSchema = z.object({
 });
 
 const EditPage = ({ params }: { params: { Id: number } }) => {
-  const [bbDetailData, setBbDetailData] = useState<BBDataType>(null);
+  const [bbDetailData, setBbDetailData] = useState<BBDataType>();
   //form初期値設定
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -47,7 +47,9 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
     const fetchData = async () => {
       const data = await getDetailData(params.Id);
       console.log("log: ", data);
-      setBbDetailData(data);
+      if (data) {
+        setBbDetailData(data);
+      }
     };
     fetchData();
   }, [params.Id]);
@@ -73,10 +75,6 @@ const EditPage = ({ params }: { params: { Id: number } }) => {
       </div>
     );
   }
-
-  //テスト用
-  // const pageNumber: number = params.Id;
-  // console.log(pageNumber);
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     const { username, title, content } = value;
