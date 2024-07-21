@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BBDataType } from "@/app/types/types";
 import { Button } from "@/components/ui/button";
 import { getDetailData } from "@/app/actions/postAction";
+import { deleteBB } from "@/app/actions/postAction";
 
 const DetailPage = ({ params }: { params: { Id: number } }) => {
   const [bbDetailData, setBbDetailData] = useState<BBDataType | null>(null);
@@ -28,19 +29,6 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
   }
   const { id, title, content, username } = bbDetailData;
 
-  //この削除処理もserverActionに
-  const deleteBB = async () => {
-    try {
-      await fetch(`http://localhost:3000/api/post/${id}`, {
-        method: "DELETE",
-      });
-      alert("正常に削除されました");
-      window.location.href = "/";
-    } catch (error) {
-      alert("削除に失敗しました");
-    }
-  };
-
   return (
     <div className="mx-auto max-w-4xl p-10 border border-gray-300 bg-white mt-10">
       <div className="mb-8">
@@ -62,7 +50,7 @@ const DetailPage = ({ params }: { params: { Id: number } }) => {
             <Button className="w-1/4">編集</Button>
           </Link>
           <Button
-            onClick={deleteBB}
+            onClick={() => deleteBB(params.Id)}
             className="ml-8 w-1/4 bg-red-600 border border-slate-500"
           >
             削除

@@ -66,3 +66,19 @@ export const editBB = async (
   revalidatePath("/");
   redirect("/");
 };
+
+//削除処理
+export const deleteBB = async (id: any) => {
+  try {
+    await prisma.post.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    console.log("log: delete done");
+  } catch (error) {
+    console.error("log: delete error");
+  }
+  revalidatePath("/");
+  redirect("/");
+};
